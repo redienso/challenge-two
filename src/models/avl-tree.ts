@@ -1,33 +1,24 @@
-class AVLTreeNode<T> {
-	left: AVLTreeNode<T>;
-	right: AVLTreeNode<T>;
-	value: T;
-	balanceFactor: number;
-}
+import Comparable from "./comparable";
+import { IAVLTreeNode, nullAVLTreeNode } from "./avl-tree-node";
 
-export default class AVLTree<T> {
-	root: AVLTreeNode<T>;
+export default class AVLTree<T extends Comparable<T>> {
+  root: IAVLTreeNode<T> = nullAVLTreeNode;
 
-	addNode(nodeValue: T) {
-	}
+  addNode(nodeValue: T, node: IAVLTreeNode<T>) {}
 
-	removeNode(isTarget: (nodeValue: T) => boolean): T {
-		return null;
-	}
+  removeNode(isTarget: (nodeValue: T) => boolean): T {
+    return null;
+  }
 
-	getBiggerNodeValues(amount: number): T[] {
-		return [];
-	}
+  getBiggerNodeValues(amount: number): T[] {
+    return [];
+  }
 
-	rotateSimpleRight() {
-	}
+  rotateSimpleRight() {}
 
-	rotateSimpleLeft() {
-	}
+  rotateSimpleLeft() {}
 
-	rotateDoubleRight() {
-	}
+  rotateDoubleRight() {}
 
-	rotateDoubleLeft() {
-	}
+  rotateDoubleLeft() {}
 }
