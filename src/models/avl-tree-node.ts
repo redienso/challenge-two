@@ -1,15 +1,20 @@
 import Comparable from "./comparable";
 
-export interface IAVLTreeNode<T extends Comparable<T>> {
+export abstract class AbsAVLTreeNode<T extends Comparable<T>> {
+  left: AbsAVLTreeNode<T>;
+  right: AbsAVLTreeNode<T>;
   height: number;
   updateHeight: () => number;
   balance: number;
   value: T;
+  static init: <T extends Comparable<T>>(nodeValue: T) => AbsAVLTreeNode<T> = (
+    nodeValue
+  ) => new AVLTreeNode(nodeValue);
 }
 
-export class AVLTreeNode<T extends Comparable<T>> implements IAVLTreeNode<T> {
-  left: IAVLTreeNode<T> = nullAVLTreeNode;
-  right: IAVLTreeNode<T> = nullAVLTreeNode;
+export class AVLTreeNode<T extends Comparable<T>> implements AbsAVLTreeNode<T> {
+  left = nullAVLTreeNode;
+  right = nullAVLTreeNode;
   private _value: T;
   private _height: number = 1;
 
@@ -34,7 +39,7 @@ export class AVLTreeNode<T extends Comparable<T>> implements IAVLTreeNode<T> {
   }
 }
 
-export const nullAVLTreeNode: IAVLTreeNode<null> = Object.freeze({
+export const nullAVLTreeNode: AbsAVLTreeNode<null> = Object.freeze({
   height: 0,
   balance: 0,
   value: null,
