@@ -1,32 +1,36 @@
 import Comparable from "./comparable";
-import { AbsAVLTreeNode, nullAVLTreeNode } from "./avl-tree-node";
+import AVLTreeNode from "./avl-tree-node";
 
 export default class AVLTree<T extends Comparable<T>> {
-  root: AbsAVLTreeNode<T> = nullAVLTreeNode;
+  root: AVLTreeNode<T> = null;
 
   addNode(nodeValue: T) {
     this.root = this._addNode(nodeValue, this.root);
   }
 
-  private _addNode(nodeValue: T, node: AbsAVLTreeNode<T>) {
-    if (node === nullAVLTreeNode) return AbsAVLTreeNode.init(nodeValue);
+  private _addNode(nodeValue: T, node: AVLTreeNode<T>) {
+    if (node === null) return new AVLTreeNode(nodeValue);
 
     const compareResult = node.value.compareTo(nodeValue);
     // if (comparationResult == 0) -- add value to node.value array
-    const nextNode = compareResult > 0 ? node.left : node.right;
-    this._addNode(nodeValue, nextNode);
+    if (compareResult > 0) {
+      node.left = this._addNode(nodeValue, node.left);
+    } else if (compareResult < 0) {
+      node.right = this._addNode(nodeValue, node.right);
+    } else console.log(nodeValue);
+
     node.updateHeight();
 
     if (node.balance < -1) {
       const compareResultFromLeftNode = node.left.value.compareTo(nodeValue);
-      if (compareResultFromLeftNode < 0) {
+      if (compareResultFromLeftNode > 0) {
         return this.rotateToRight(node);
-      } else if (compareResultFromLeftNode > 0) {
+      } else if (compareResultFromLeftNode < 0) {
         node.left = this.rotateToLeft(node.left);
         return this.rotateToRight(node);
       }
     } else if (node.balance > 1) {
-      const compareResultFromRighNode = node.left.value.compareTo(nodeValue);
+      const compareResultFromRighNode = node.right.value.compareTo(nodeValue);
       if (compareResultFromRighNode < 0) {
         return this.rotateToLeft(node);
       } else if (compareResultFromRighNode > 0) {
@@ -43,10 +47,19 @@ export default class AVLTree<T extends Comparable<T>> {
   }
 
   getBiggerNodeValues(amount: number): T[] {
-    return [];
+    const list = [];
+    function travelInDescOrder(node: AVLTreeNode<T>) {
+      if (node == null) return;
+      travelInDescOrder(node.right);
+      if (list.length + 1 >= amount) return;
+      list.push(node.value);
+      travelInDescOrder(node.left);
+    }
+    travelInDescOrder(this.root);
+    return list;
   }
 
-  rotateToRight(node: AbsAVLTreeNode<T>) {
+  rotateToRight(node: AVLTreeNode<T>) {
     const leftNode = node.left;
     const rightNodeOfLeftNode = leftNode.right;
     leftNode.right = node;
@@ -56,7 +69,7 @@ export default class AVLTree<T extends Comparable<T>> {
     return leftNode;
   }
 
-  rotateToLeft(node: AbsAVLTreeNode<T>) {
+  rotateToLeft(node: AVLTreeNode<T>) {
     const rightNode = node.right;
     const leftNodeOfRightNode = rightNode.left;
     rightNode.left = node;

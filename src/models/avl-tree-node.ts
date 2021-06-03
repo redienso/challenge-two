@@ -1,20 +1,19 @@
 import Comparable from "./comparable";
 
-export abstract class AbsAVLTreeNode<T extends Comparable<T>> {
-  left: AbsAVLTreeNode<T>;
-  right: AbsAVLTreeNode<T>;
+interface IAVLTreeNode<T extends Comparable<T>> {
+  left: IAVLTreeNode<T>;
+  right: IAVLTreeNode<T>;
   height: number;
-  updateHeight: () => number;
+  updateHeight: () => void;
   balance: number;
   value: T;
-  static init: <T extends Comparable<T>>(nodeValue: T) => AbsAVLTreeNode<T> = (
-    nodeValue
-  ) => new AVLTreeNode(nodeValue);
 }
 
-export class AVLTreeNode<T extends Comparable<T>> implements AbsAVLTreeNode<T> {
-  left = nullAVLTreeNode;
-  right = nullAVLTreeNode;
+export default class AVLTreeNode<T extends Comparable<T>>
+  implements IAVLTreeNode<T>
+{
+  left = null;
+  right = null;
   private _value: T;
   private _height: number = 1;
 
@@ -31,17 +30,15 @@ export class AVLTreeNode<T extends Comparable<T>> implements AbsAVLTreeNode<T> {
   }
 
   get balance() {
-    return this.right.height - this.left.height;
+    return this.getHeight(this.right) - this.getHeight(this.left);
+  }
+
+  private getHeight(node: AVLTreeNode<T>) {
+    return node ? node.height : 0;
   }
 
   updateHeight() {
-    return (this._height = Math.max(this.left.height, this.right.height));
+    this._height =
+      Math.max(this.getHeight(this.left), this.getHeight(this.right)) + 1;
   }
 }
-
-export const nullAVLTreeNode: AbsAVLTreeNode<null> = Object.freeze({
-  height: 0,
-  balance: 0,
-  value: null,
-  updateHeight: () => 0,
-});
