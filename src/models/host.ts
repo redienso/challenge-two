@@ -41,9 +41,8 @@ export default class Host {
     );
   }
 
-  removeApp(appName: string) {
-    const isRemoveTarget = (app: Application) => app.attrs.name == appName;
-    const removedApp = this.appsAVLTree.removeNode(isRemoveTarget);
+  removeApp(app: Application) {
+    const removedApp = this.appsAVLTree.removeNode(app);
     if (removedApp && this.wasRemovedOnePotencialFirst25TopApp(removedApp))
       this.reloadFrist25TopApps = true;
   }

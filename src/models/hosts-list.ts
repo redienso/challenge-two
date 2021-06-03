@@ -16,8 +16,8 @@ export default class HostsList {
     }
   }
 
-  removeAppFromHosts(appName: string, ...hostsNames: string[]) {
+  removeAppFromHosts(app: Application, ...hostsNames: string[]) {
     for (const hostName of hostsNames)
-      if (this.hosts.has(hostName)) this.hosts.get(hostName).removeApp(appName);
+      if (this.hosts.has(hostName)) this.hosts.get(hostName).removeApp(app);
   }
 }
