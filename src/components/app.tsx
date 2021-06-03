@@ -1,6 +1,9 @@
 import React from "react";
 import Applitaction, { AppFromBack } from "../models/application";
 import HostsList from "../models/hosts-list";
+import ApplicationItem from "./application-item";
+import HostCard from "./host-card";
+import HostsTemplate from "./hosts-template";
 
 const hostsList = new HostsList();
 
@@ -16,5 +19,17 @@ export default function App() {
       });
   }, []);
 
-  return <h1>Hello World</h1>;
+  return (
+    <HostsTemplate>
+      <div>header</div>
+      {Array(11)
+        .fill(null)
+        .map((_, idx) => (
+          <HostCard>
+            <span>title</span>
+            <ApplicationItem apdex={idx} name="the name" />
+          </HostCard>
+        ))}
+    </HostsTemplate>
+  );
 }

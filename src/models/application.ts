@@ -1,6 +1,6 @@
 import Comparable from "./comparable";
 
-interface AppAttributes {
+export interface AppAttributes {
   name: string;
   contributors: string[];
   version: number;
