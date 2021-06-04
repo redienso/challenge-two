@@ -115,19 +115,28 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
     return current;
   }
 
-  // TODO finish implementation
   travel(order, amount): T[] {
     if (new Set(order).size != 3)
       throw Error("Travel order should has 3 elements.");
 
     const list = [];
-    (function _travel(node: IAVLTreeNode<T>) {
+
+    const stepByNode = {
+      left: (node) => _travel(node.left),
+      right: (node) => _travel(node.right),
+      root: (node) => {
+        if (list.length + 1 > amount) return;
+        list.push(node.value);
+      },
+    };
+
+    function _travel(node: IAVLTreeNode<T>) {
       if (node == null) return;
-      _travel(node.right);
-      if (list.length + 1 > amount) return;
-      list.push(node.value);
-      _travel(node.left);
-    })(this.root);
+      for (const nodeName of order) {
+        stepByNode[nodeName](node);
+      }
+    }
+    _travel(this.root);
 
     return list;
   }
