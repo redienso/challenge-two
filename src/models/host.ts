@@ -45,6 +45,7 @@ export default class Host {
     const removedApp = this.appsAVLTree.removeNode(app);
     if (removedApp && this.wasRemovedOnePotentialFirst25TopApp(removedApp))
       this.reloadFirst25TopApps = true;
+    return removedApp;
   }
 
   private wasRemovedOnePotentialFirst25TopApp(app: Application) {

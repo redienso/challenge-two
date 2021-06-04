@@ -17,7 +17,7 @@ export default class AVLTree<T extends Comparable<T>> {
       node.left = this._addNode(nodeValue, node.left);
     } else if (compareResult < 0) {
       node.right = this._addNode(nodeValue, node.right);
-    } else console.log(nodeValue);
+    } // else console.log(nodeValue);
 
     node.updateHeight();
 
@@ -54,10 +54,15 @@ export default class AVLTree<T extends Comparable<T>> {
 
     const compareRefult = nodeValue.compareTo(node.value);
     if (compareRefult < 0) {
-      node.left = this._removeNode(nodeValue, node.left);
+      const [newNode, newDeleted] = this._removeNode(nodeValue, node.left);
+      node.left = newNode;
+      deleted = newDeleted;
     } else if (compareRefult > 0) {
-      node.right = this._removeNode(nodeValue, node.right);
+      const [newNode, newDeleted] = this._removeNode(nodeValue, node.right);
+      node.right = newNode;
+      deleted = newDeleted;
     } else {
+      deleted = node.value;
       if (!node.left && !node.right) {
         node = null;
       } else if (!node.left) {
@@ -67,7 +72,6 @@ export default class AVLTree<T extends Comparable<T>> {
       } else {
         const nodeWithSuccessorValue = this.getNodeWithMinValue(node.right);
         node.value = nodeWithSuccessorValue.value;
-        deleted = node.value;
         node.right = this._removeNode(node.value, node.right);
       }
     }
