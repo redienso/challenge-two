@@ -17,29 +17,30 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
   private _addNode(nodeValue: T, node: IAVLTreeNode<T>) {
     if (node === null) return new AVLTreeNode(nodeValue);
 
-    const compareResult = node.value.compareTo(nodeValue);
-    // if (comparationResult == 0) -- add value to node.value array
-    if (compareResult > 0) {
+    const comparativeResult = node.value.compareTo(nodeValue);
+    // if (comparativeResult == 0) -- add value to node.value array
+    if (comparativeResult > 0) {
       node.left = this._addNode(nodeValue, node.left);
-    } else if (compareResult < 0) {
+    } else if (comparativeResult < 0) {
       node.right = this._addNode(nodeValue, node.right);
     } // else console.log(nodeValue);
 
     node.updateHeight();
 
     if (node.balance < -1) {
-      const compareResultFromLeftNode = node.left.value.compareTo(nodeValue);
-      if (compareResultFromLeftNode > 0) {
+      const comparativeResultFromLeftNode =
+        node.left.value.compareTo(nodeValue);
+      if (comparativeResultFromLeftNode > 0) {
         return node.rotateToRight();
-      } else if (compareResultFromLeftNode < 0) {
+      } else if (comparativeResultFromLeftNode < 0) {
         node.left = node.left.rotateToLeft();
         return node.rotateToRight();
       }
     } else if (node.balance > 1) {
-      const compareResultFromRighNode = node.right.value.compareTo(nodeValue);
-      if (compareResultFromRighNode < 0) {
+      const compareResultFromRightNode = node.right.value.compareTo(nodeValue);
+      if (compareResultFromRightNode < 0) {
         return node.rotateToLeft();
-      } else if (compareResultFromRighNode > 0) {
+      } else if (compareResultFromRightNode > 0) {
         node.right = node.right.rotateToRight();
         return node.rotateToLeft();
       }
@@ -61,12 +62,12 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
     let deleted = null;
     if (!node) return [node, deleted];
 
-    const compareRefult = nodeValue.compareTo(node.value);
-    if (compareRefult < 0) {
+    const comparativeResult = nodeValue.compareTo(node.value);
+    if (comparativeResult < 0) {
       const [newNode, newDeleted] = this._removeNode(nodeValue, node.left);
       node.left = newNode;
       deleted = newDeleted;
-    } else if (compareRefult > 0) {
+    } else if (comparativeResult > 0) {
       const [newNode, newDeleted] = this._removeNode(nodeValue, node.right);
       node.right = newNode;
       deleted = newDeleted;
@@ -117,7 +118,9 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
 
   travel(order, amount): T[] {
     if (new Set(order).size != 3)
-      throw Error("Travel order should has 3 elements.");
+      throw Error(
+        "Travel order should mention the 3 node names without repetitions."
+      );
 
     const list = [];
 
