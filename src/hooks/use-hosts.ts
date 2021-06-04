@@ -7,6 +7,7 @@ import mockApps from "../apps";
 const appsHostList = new AppsHostList();
 
 export default function useHosts() {
+  const [hosts, setHosts] = React.useState([]);
   /*
   React.useEffect(() => {
     fetch("https://kuupanda.free.beeceptor.com/apps", { method: "get" })
@@ -18,6 +19,7 @@ export default function useHosts() {
   // TODO remove this mock code
   React.useEffect(() => {
     loadApps(mockApps);
+    setHosts(appsHostList.hosts);
     console.log(appsHostList.getTopAppsByHost("7e6272f7-098e.dakota.biz"));
     // delete app with name = "Generic Concrete Car - Roberts - Brown, Inc"
     console.log(
@@ -35,5 +37,5 @@ export default function useHosts() {
     }
   }
 
-  return { hosts: appsHostList.hosts };
+  return { hosts };
 }
