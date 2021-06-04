@@ -110,7 +110,7 @@ export default class AVLTree<T extends Comparable<T>> {
     function travelInDescOrder(node: AVLTreeNode<T>) {
       if (node == null) return;
       travelInDescOrder(node.right);
-      if (list.length + 1 >= amount) return;
+      if (list.length + 1 > amount) return;
       list.push(node.value);
       travelInDescOrder(node.left);
     }
