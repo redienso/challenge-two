@@ -5,7 +5,7 @@ export default class Host {
   private _name: string;
   private appsAVLTree: AVLTree<Application>;
   private _first25TopApps: Application[];
-  private reloadFrist25TopApps = true;
+  private reloadFirst25TopApps = true;
 
   constructor(name: string) {
     this._name = name;
@@ -17,9 +17,9 @@ export default class Host {
   }
 
   get first25TopApps() {
-    if (this.reloadFrist25TopApps) {
+    if (this.reloadFirst25TopApps) {
       this._first25TopApps = this.searchFirst25TopApps();
-      this.reloadFrist25TopApps = false;
+      this.reloadFirst25TopApps = false;
     }
     return this._first25TopApps;
   }
@@ -29,12 +29,12 @@ export default class Host {
   }
 
   addApp(app: Application) {
-    if (this.wasAddedOnePotencialFirst25TopApp(app))
-      this.reloadFrist25TopApps = true;
+    if (this.wasAddedOnePotentialFirst25TopApp(app))
+      this.reloadFirst25TopApps = true;
     this.appsAVLTree.addNode(app);
   }
 
-  private wasAddedOnePotencialFirst25TopApp(app: Application) {
+  private wasAddedOnePotentialFirst25TopApp(app: Application) {
     const f25taL = this.first25TopApps.length;
     return (
       !f25taL || app.attrs.apdex > this.first25TopApps[f25taL - 1].attrs.apdex
@@ -43,11 +43,11 @@ export default class Host {
 
   removeApp(app: Application) {
     const removedApp = this.appsAVLTree.removeNode(app);
-    if (removedApp && this.wasRemovedOnePotencialFirst25TopApp(removedApp))
-      this.reloadFrist25TopApps = true;
+    if (removedApp && this.wasRemovedOnePotentialFirst25TopApp(removedApp))
+      this.reloadFirst25TopApps = true;
   }
 
-  private wasRemovedOnePotencialFirst25TopApp(app: Application) {
+  private wasRemovedOnePotentialFirst25TopApp(app: Application) {
     const f25taL = this.first25TopApps.length;
     return (
       f25taL && app.attrs.apdex >= this.first25TopApps[f25taL - 1].attrs.apdex

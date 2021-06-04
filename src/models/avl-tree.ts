@@ -65,7 +65,7 @@ export default class AVLTree<T extends Comparable<T>> {
       } else if (!node.right) {
         node = node.left;
       } else {
-        const nodeWithSuccessorValue = this.getNondeWithMinValue(node.right);
+        const nodeWithSuccessorValue = this.getNodeWithMinValue(node.right);
         node.value = nodeWithSuccessorValue.value;
         deleted = node.value;
         node.right = this._removeNode(node.value, node.right);
@@ -93,7 +93,7 @@ export default class AVLTree<T extends Comparable<T>> {
     return [node, deleted];
   }
 
-  private getNondeWithMinValue(node: AVLTreeNode<T>): AVLTreeNode<T> {
+  private getNodeWithMinValue(node: AVLTreeNode<T>): AVLTreeNode<T> {
     let current = node;
     while (current.left) {
       current = current.left;

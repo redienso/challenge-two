@@ -11,22 +11,22 @@ export interface AppFromBack extends AppAttributes {
   host: string[];
 }
 
-export default class Applitaction implements Comparable<Applitaction> {
+export default class Application implements Comparable<Application> {
   attrs: AppAttributes;
 
   constructor(attributes: AppAttributes) {
     this.attrs = attributes;
   }
 
-  compareTo(app: Applitaction) {
+  compareTo(app: Application) {
     return this.compareApdexTo(app);
   }
 
-  private compareApdexTo(app: Applitaction) {
+  private compareApdexTo(app: Application) {
     return this.attrs.apdex - app.attrs.apdex;
   }
 
-  isEquals(app: Applitaction) {
+  isEquals(app: Application) {
     return this.attrs.name == app.attrs.name;
   }
 }
