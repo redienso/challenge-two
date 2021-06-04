@@ -1,14 +1,20 @@
 import Comparable from "./comparable";
-import AVLTreeNode from "./avl-tree-node";
+import AVLTreeNode, { IAVLTreeNode } from "./avl-tree-node";
 
-export default class AVLTree<T extends Comparable<T>> {
-  root: AVLTreeNode<T> = null;
+export interface IAVLTree<T extends Comparable<T>> {
+  root: IAVLTreeNode<T>;
+  addNode(node: T): void;
+  removeNode(node: T): T;
+  travel(order: ("left" | "root" | "right")[], amount: number): T[];
+}
+export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
+  root: IAVLTreeNode<T> = null;
 
   addNode(nodeValue: T) {
     this.root = this._addNode(nodeValue, this.root);
   }
 
-  private _addNode(nodeValue: T, node: AVLTreeNode<T>) {
+  private _addNode(nodeValue: T, node: IAVLTreeNode<T>) {
     if (node === null) return new AVLTreeNode(nodeValue);
 
     const compareResult = node.value.compareTo(nodeValue);
@@ -24,18 +30,18 @@ export default class AVLTree<T extends Comparable<T>> {
     if (node.balance < -1) {
       const compareResultFromLeftNode = node.left.value.compareTo(nodeValue);
       if (compareResultFromLeftNode > 0) {
-        return this.rotateToRight(node);
+        return node.rotateToRight();
       } else if (compareResultFromLeftNode < 0) {
-        node.left = this.rotateToLeft(node.left);
-        return this.rotateToRight(node);
+        node.left = node.left.rotateToLeft();
+        return node.rotateToRight();
       }
     } else if (node.balance > 1) {
       const compareResultFromRighNode = node.right.value.compareTo(nodeValue);
       if (compareResultFromRighNode < 0) {
-        return this.rotateToLeft(node);
+        return node.rotateToLeft();
       } else if (compareResultFromRighNode > 0) {
-        node.right = this.rotateToRight(node.right);
-        return this.rotateToLeft(node);
+        node.right = node.right.rotateToRight();
+        return node.rotateToLeft();
       }
     }
 
@@ -48,7 +54,10 @@ export default class AVLTree<T extends Comparable<T>> {
     return deleted;
   }
 
-  private _removeNode(nodeValue: T, node: AVLTreeNode<T>): [AVLTreeNode<T>, T] {
+  private _removeNode(
+    nodeValue: T,
+    node: IAVLTreeNode<T>
+  ): [IAVLTreeNode<T>, T] {
     let deleted = null;
     if (!node) return [node, deleted];
 
@@ -72,7 +81,8 @@ export default class AVLTree<T extends Comparable<T>> {
       } else {
         const nodeWithSuccessorValue = this.getNodeWithMinValue(node.right);
         node.value = nodeWithSuccessorValue.value;
-        node.right = this._removeNode(node.value, node.right);
+        const [newNode] = this._removeNode(node.value, node.right);
+        node.right = newNode;
       }
     }
 
@@ -80,24 +90,24 @@ export default class AVLTree<T extends Comparable<T>> {
 
     node.updateHeight();
     if (node.balance < -1) {
-      if (node.left.balance <= 0) return this.rotateToRight(node);
+      if (node.left.balance <= 0) return [node.rotateToRight(), deleted];
       else {
-        node.left = this.rotateToLeft(node.left);
-        return this.rotateToRight(node);
+        node.left = node.left.rotateToLeft();
+        return [node.rotateToRight(), deleted];
       }
     }
     if (node.balance > 1) {
-      if (node.right.balance >= 0) return this.rotateToLeft(node);
+      if (node.right.balance >= 0) return [node.rotateToLeft(), deleted];
       else {
-        node.right = this.rotateToRight(node.right);
-        return this.rotateToLeft(node);
+        node.right = node.right.rotateToRight();
+        return [node.rotateToLeft(), deleted];
       }
     }
 
     return [node, deleted];
   }
 
-  private getNodeWithMinValue(node: AVLTreeNode<T>): AVLTreeNode<T> {
+  private getNodeWithMinValue(node: IAVLTreeNode<T>): IAVLTreeNode<T> {
     let current = node;
     while (current.left) {
       current = current.left;
@@ -105,36 +115,20 @@ export default class AVLTree<T extends Comparable<T>> {
     return current;
   }
 
-  getBiggerNodeValues(amount: number): T[] {
+  // TODO finish implementation
+  travel(order, amount): T[] {
+    if (new Set(order).size != 3)
+      throw Error("Travel order should has 3 elements.");
+
     const list = [];
-    function travelInDescOrder(node: AVLTreeNode<T>) {
+    (function _travel(node: IAVLTreeNode<T>) {
       if (node == null) return;
-      travelInDescOrder(node.right);
+      _travel(node.right);
       if (list.length + 1 > amount) return;
       list.push(node.value);
-      travelInDescOrder(node.left);
-    }
-    travelInDescOrder(this.root);
+      _travel(node.left);
+    })(this.root);
+
     return list;
-  }
-
-  rotateToRight(node: AVLTreeNode<T>) {
-    const leftNode = node.left;
-    const rightNodeOfLeftNode = leftNode.right;
-    leftNode.right = node;
-    node.left = rightNodeOfLeftNode;
-    node.updateHeight();
-    leftNode.updateHeight();
-    return leftNode;
-  }
-
-  rotateToLeft(node: AVLTreeNode<T>) {
-    const rightNode = node.right;
-    const leftNodeOfRightNode = rightNode.left;
-    rightNode.left = node;
-    node.right = leftNodeOfRightNode;
-    node.updateHeight();
-    rightNode.updateHeight();
-    return rightNode;
   }
 }

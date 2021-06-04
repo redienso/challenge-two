@@ -1,5 +1,4 @@
-import Comparable from "./comparable";
-
+import Guest from "./guest";
 export interface AppAttributes {
   name: string;
   contributors: string[];
@@ -11,11 +10,15 @@ export interface AppFromBack extends AppAttributes {
   host: string[];
 }
 
-export default class Application implements Comparable<Application> {
-  attrs: AppAttributes;
+export default class Application implements Guest<Application> {
+  private attrs: AppAttributes;
 
   constructor(attributes: AppAttributes) {
     this.attrs = attributes;
+  }
+
+  get<K extends keyof AppAttributes>(key: K): AppAttributes[K] {
+    return this.attrs[key];
   }
 
   compareTo(app: Application) {
@@ -23,10 +26,10 @@ export default class Application implements Comparable<Application> {
   }
 
   private compareApdexTo(app: Application) {
-    return this.attrs.apdex - app.attrs.apdex;
+    return this.get("apdex") - app.get("apdex");
   }
 
   isEquals(app: Application) {
-    return this.attrs.name == app.attrs.name;
+    return this.get("name") == app.get("name");
   }
 }
