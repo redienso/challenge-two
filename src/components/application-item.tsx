@@ -8,16 +8,22 @@ const useStyles = createUseStyles({
     display: "grid",
     gridTemplateColumns: "22px 1fr",
     gridColumnGap: 16,
+    cursor: "pointer",
   },
 });
 
-const AppItem: React.FC<Pick<AppAttributes, "apdex" | "name">> = function ({
-  apdex,
-  name,
-}) {
+const ApplicationItem: React.FC<
+  Pick<AppAttributes, "apdex" | "name" | "version">
+> = function ({ apdex, name, version }) {
   const classes = useStyles();
+
+  function showReleaseVersion() {
+    const message = `Version: ${version}\nApplication: ${name}`;
+    alert(message);
+  }
+
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onClick={showReleaseVersion}>
       <Typography secondary bold size={13} opacity={62} lineHeight={1.5}>
         {apdex}
       </Typography>
@@ -26,4 +32,4 @@ const AppItem: React.FC<Pick<AppAttributes, "apdex" | "name">> = function ({
   );
 };
 
-export default AppItem;
+export default ApplicationItem;

@@ -6,7 +6,7 @@ import HostsTemplate from "./hosts-template";
 import Checkbox from "./checkbox";
 import Typography from "./typography";
 import HeaderRightSide from "./header-right-side";
-import AppList from "./app-list";
+import ApplicationList from "./application-list";
 
 export default function App() {
   const [showAsList, setShowAsList] = React.useState(false);
@@ -36,7 +36,7 @@ export default function App() {
       {hosts.map((host) => (
         <HostCard key={host.name}>
           <Typography bold>{host.name}</Typography>
-          <AppList itemList={host.first25TopApps.slice(0, 5)} />
+          <ApplicationList itemList={host.first25TopApps.slice(0, 5)} />
         </HostCard>
       ))}
     </HostsTemplate>
