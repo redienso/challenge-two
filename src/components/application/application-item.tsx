@@ -1,7 +1,7 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { AppAttributes } from "../models/application";
-import Typography from "./typography";
+import { AppAttributes } from "../../models/application";
+import Typography from "../typography";
 
 const useStyles = createUseStyles({
   root: {

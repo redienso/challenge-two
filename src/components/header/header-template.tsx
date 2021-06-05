@@ -17,7 +17,7 @@ const useStyles = createUseStyles({
   },
 });
 
-const Header: React.FC<PropTypes> = function ({ leftSide, rightSide }) {
+const HeaderTemplate: React.FC<PropTypes> = function ({ leftSide, rightSide }) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
@@ -27,4 +27,4 @@ const Header: React.FC<PropTypes> = function ({ leftSide, rightSide }) {
   );
 };
 
-export default Header;
+export default HeaderTemplate;

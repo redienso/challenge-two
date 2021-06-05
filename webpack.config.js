@@ -14,7 +14,6 @@ module.exports = {
   devtool: "source-map",
   plugins: [
     new HtmlWebpackPlugin({
-      title: "Apdex Board",
       template: "./src/index.html",
     }),
   ],

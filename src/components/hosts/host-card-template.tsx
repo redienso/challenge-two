@@ -1,6 +1,6 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { AppTheme } from "../app-theme";
+import { AppTheme } from "../../app-theme";
 
 const useStyles = createUseStyles((theme: AppTheme) => ({
   root: {
@@ -12,9 +12,9 @@ const useStyles = createUseStyles((theme: AppTheme) => ({
   },
 }));
 
-const HostCard: React.FC = function ({ children }) {
+const HostCardTemplate: React.FC = function ({ children }) {
   const classes = useStyles();
   return <div className={classes.root}>{children}</div>;
 };
 
-export default HostCard;
+export default HostCardTemplate;

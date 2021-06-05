@@ -1,15 +1,15 @@
 import React from "react";
-import Application from "../models/application";
+import Application from "../../models/application";
 import ApplicationItem from "./application-item";
 
 type PropTypes = {
-  itemList: Application[];
+  apps: Application[];
 };
 
-const ApplicationList: React.FC<PropTypes> = function ({ itemList }) {
+const ApplicationList: React.FC<PropTypes> = function ({ apps }) {
   return (
     <React.Fragment>
-      {itemList.map((app) => (
+      {apps.map((app) => (
         <ApplicationItem
           key={app.get("name")}
           apdex={app.get("apdex")}
