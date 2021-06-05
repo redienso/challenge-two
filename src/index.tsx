@@ -1,14 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./components/app";
+
 import jss from "jss";
 import preset from "jss-preset-default";
-import { SheetsRegistry } from "react-jss";
-import { JssProvider } from "react-jss";
+import { JssProvider, SheetsRegistry, ThemeProvider } from "react-jss";
+
 import HelveticaNeueBold from "./assets/fonts/helvetica-neue-bold.ttf";
 import HelveticaNeue from "./assets/fonts/helvetica-neue-regular.ttf";
 
-const setupJss = () => {
+import App from "./components/app";
+import { theme, AppTheme } from "./app-theme";
+
+const setupJss = (theme: AppTheme) => {
   jss.setup(preset());
 
   const sheetsRegistry = new SheetsRegistry();
@@ -28,8 +31,10 @@ const setupJss = () => {
         ],
         body: {
           margin: 0,
-          background: "#f5f5f5",
-          fontFamily: "HelveticaNeue",
+          background: theme.palette.background.default,
+          fontFamily: theme.font.regular,
+          lineHeight: 1.2,
+          fontSize: 16,
         },
       },
     })
@@ -40,11 +45,13 @@ const setupJss = () => {
   return sheetsRegistry;
 };
 
-const sheets = setupJss();
+const sheets = setupJss(theme);
 
 ReactDOM.render(
-  <JssProvider registry={sheets}>
-    <App />
-  </JssProvider>,
+  <ThemeProvider theme={theme}>
+    <JssProvider registry={sheets}>
+      <App />
+    </JssProvider>
+  </ThemeProvider>,
   document.getElementById("apdex-board-app")
 );
