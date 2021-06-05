@@ -1,15 +1,5 @@
-import Comparable from "./comparable";
-
-export interface IAVLTreeNode<T extends Comparable<T>> {
-  left: IAVLTreeNode<T>;
-  right: IAVLTreeNode<T>;
-  height: number;
-  balance: number;
-  value: T;
-  updateHeight: () => void;
-  rotateToRight: () => IAVLTreeNode<T>;
-  rotateToLeft: () => IAVLTreeNode<T>;
-}
+import Comparable from "./abstract/comparable";
+import IAVLTreeNode from "./abstract/i-avl-tree-node";
 
 export default class AVLTreeNode<T extends Comparable<T>>
   implements IAVLTreeNode<T>

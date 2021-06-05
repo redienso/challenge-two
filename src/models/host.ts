@@ -1,14 +1,7 @@
-import AVLTree, { IAVLTree } from "./avl-tree";
-import Guest from "./guest";
+import AVLTree from "./avl-tree";
 import Application from "./application";
+import IHost from "./abstract/i-host";
 
-export interface IHost<T extends Guest<T>> {
-  name: string;
-  guestsTree: IAVLTree<T>;
-  addGuest(guest: Guest<T>): void;
-  removeGuest(guest: Guest<T>): T;
-  searchGuests(order: "asc" | "desc", amount: number): T[];
-}
 export default class AppsHost implements IHost<Application> {
   private _name: string;
   private _guestsTree: AVLTree<Application>;

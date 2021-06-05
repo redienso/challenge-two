@@ -1,4 +1,4 @@
-import Guest from "./guest";
+import Guest from "./abstract/guest";
 export interface AppAttributes {
   name: string;
   contributors: string[];

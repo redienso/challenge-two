@@ -1,12 +1,8 @@
-import Comparable from "./comparable";
-import AVLTreeNode, { IAVLTreeNode } from "./avl-tree-node";
+import Comparable from "./abstract/comparable";
+import IAVLTree from "./abstract/i-avl-tree";
+import IAVLTreeNode from "./abstract/i-avl-tree-node";
+import AVLTreeNode from "./avl-tree-node";
 
-export interface IAVLTree<T extends Comparable<T>> {
-  root: IAVLTreeNode<T>;
-  addNode(node: T): void;
-  removeNode(node: T): T;
-  travel(order: ("left" | "root" | "right")[], amount: number): T[];
-}
 export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
   root: IAVLTreeNode<T> = null;
 
