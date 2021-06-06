@@ -15,6 +15,8 @@ export type UIHost = Pick<AppsHost, "name"> & {
   apps: UIApp[];
 };
 
+const appsCountForUIHost = 5;
+
 export default function useHosts() {
   const [hosts, setHosts] = React.useState<Record<string, UIHost>>({});
   const hostList = React.useMemo(() => Object.values(hosts), [hosts]);
@@ -64,7 +66,7 @@ export default function useHosts() {
         ...current,
         [host.name]: {
           name: host.name,
-          apps: host.first25TopApps.slice(0, 5).map((app) => ({
+          apps: host.first25TopApps.slice(0, appsCountForUIHost).map((app) => ({
             id: app.id,
             name: app.get("name"),
             version: app.get("version"),
