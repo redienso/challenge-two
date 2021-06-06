@@ -5,7 +5,7 @@ export default class AppsHostList {
   private _hosts: Map<string, AppsHost> = new Map();
 
   get hosts() {
-    return Array.from(this._hosts.values());
+    return this._hosts;
   }
 
   getTopAppsByHost(hostName: string): Application[] {
@@ -13,17 +13,28 @@ export default class AppsHostList {
   }
 
   addAppToHosts(newApp: Application, ...hostsNames: string[]) {
+    const hostsModified = [];
     for (const hostName of hostsNames) {
-      if (!this._hosts.has(hostName))
+      if (!this._hosts.has(hostName)) {
         this._hosts.set(hostName, new AppsHost(hostName));
-      this._hosts.get(hostName).addGuest(newApp);
+      }
+      const host = this._hosts.get(hostName);
+      host.addGuest(newApp);
+      hostsModified.push(host);
     }
+    return hostsModified;
   }
 
   removeAppFromHosts(app: Application, ...hostsNames: string[]) {
-    for (const hostName of hostsNames)
+    const deletedByHost: Record<string, [AppsHost, Application]> = {};
+    for (const hostName of hostsNames) {
       if (this._hosts.has(hostName)) {
-        return this._hosts.get(hostName).removeGuest(app);
+        const deleted = this._hosts.get(hostName).removeGuest(app);
+        if (deleted) {
+          deletedByHost[hostName] = [this.hosts.get(hostName), deleted];
+        }
       }
+    }
+    return deletedByHost;
   }
 }

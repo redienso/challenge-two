@@ -11,11 +11,15 @@ export interface AppFromBack extends AppAttributes {
 }
 
 export default class Application extends Guest<Application> {
-  private attrs: AppAttributes;
+  private _attrs: AppAttributes;
 
   constructor(attributes: AppAttributes) {
     super(attributes.name);
-    this.attrs = attributes;
+    this._attrs = attributes;
+  }
+
+  get attrs() {
+    return this._attrs;
   }
 
   get<K extends keyof AppAttributes>(key: K): AppAttributes[K] {

@@ -1,11 +1,11 @@
 import React from "react";
-import AppsHost from "../../models/apps-host";
 import HostCardTemplate from "../hosts/host-card-template";
 import ApplicationList from "../application/application-list";
 import Typography from "../typography";
+import { UIHost } from "../../hooks/use-hosts";
 
 type PropTypes = {
-  hosts: AppsHost[];
+  hosts: UIHost[];
 };
 
 const HostList: React.FC<PropTypes> = function ({ hosts }) {
@@ -14,7 +14,7 @@ const HostList: React.FC<PropTypes> = function ({ hosts }) {
       {hosts.map((host) => (
         <HostCardTemplate key={host.name}>
           <Typography bold>{host.name}</Typography>
-          <ApplicationList apps={host.first25TopApps.slice(0, 5)} />
+          <ApplicationList apps={host.apps} />
         </HostCardTemplate>
       ))}
     </React.Fragment>

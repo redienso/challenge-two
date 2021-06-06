@@ -3,11 +3,21 @@ import AppsHostList from "../models/hosts-list";
 import Application, { AppAttributes, AppFromBack } from "../models/application";
 // TODO remove this mock
 import mockApps from "../apps";
+import AppsHost from "../models/apps-host";
 
 const appsHostList = new AppsHostList();
 
+export type UIApp = Pick<AppAttributes, "name" | "apdex" | "version"> & {
+  id: string;
+};
+
+export type UIHost = Pick<AppsHost, "name"> & {
+  apps: UIApp[];
+};
+
 export default function useHosts() {
-  const [hosts, setHosts] = React.useState([]);
+  const [hosts, setHosts] = React.useState<Record<string, UIHost>>({});
+  const hostList = React.useMemo(() => Object.values(hosts), [hosts]);
   /*
   React.useEffect(() => {
     fetch("https://kuupanda.free.beeceptor.com/apps", { method: "get" })
@@ -18,27 +28,77 @@ export default function useHosts() {
 
   // TODO remove this mock code
   React.useEffect(() => {
-    loadApps(mockApps);
-    setHosts(appsHostList.hosts);
-    console.log(appsHostList.getTopAppsByHost("7e6272f7-098e.dakota.biz"));
+    loadAppsFromBack(mockApps);
+
     // delete app with name = "Generic Concrete Car - Roberts - Brown, Inc"
-    console.log(
-      appsHostList.removeAppFromHosts(
-        new Application({
-          apdex: 76,
-          name: "Generic Concrete Car - Roberts - Brown, Inc",
-        } as AppAttributes),
-        "7e6272f7-098e.dakota.biz"
-      )
-    );
-    console.log(appsHostList.getTopAppsByHost("7e6272f7-098e.dakota.biz"));
+    setTimeout(() => {
+      const hostNames = [
+        "7e6272f7-098e.dakota.biz",
+        "e7bf58af-f0be.dallas.biz",
+      ];
+      const {
+        [hostNames[0]]: [, deletedAppOne],
+        [hostNames[1]]: [, deletedAppTwo],
+      } = removeAppFromHosts(
+        {
+          apdex: 99,
+          name: "Practical Fresh Chips - Weber - Lemke, Inc",
+        },
+        ...hostNames
+      );
+
+      setTimeout(() => {
+        addAppToHosts(deletedAppOne.attrs, ...hostNames);
+        addAppToHosts(deletedAppTwo.attrs, ...hostNames);
+      }, 3000);
+    }, 3000);
   }, []);
 
-  function loadApps(apps: AppFromBack[]) {
+  function loadAppsFromBack(apps: AppFromBack[]) {
     for (const { host: hosts, ...appAttrs } of apps) {
-      appsHostList.addAppToHosts(new Application(appAttrs), ...hosts);
+      addAppToHosts(appAttrs, ...hosts);
     }
   }
 
-  return { hosts };
+  function updateStateHosts(hosts: AppsHost[]) {
+    for (const host of hosts) {
+      setHosts((current) => ({
+        ...current,
+        [host.name]: {
+          name: host.name,
+          apps: host.first25TopApps.slice(0, 5).map((app) => ({
+            id: app.id,
+            name: app.get("name"),
+            version: app.get("version"),
+            apdex: app.get("apdex"),
+          })),
+        },
+      }));
+    }
+  }
+
+  function removeAppFromHosts(
+    { name, apdex }: Pick<UIApp, "name" | "apdex">,
+    ...hostNames: string[]
+  ) {
+    const deletedByHost = appsHostList.removeAppFromHosts(
+      new Application({
+        apdex,
+        name,
+      } as AppAttributes),
+      ...hostNames
+    );
+    updateStateHosts(Object.values(deletedByHost).map(([host]) => host));
+    return deletedByHost;
+  }
+
+  function addAppToHosts(appAttributes: AppAttributes, ...hostNames: string[]) {
+    const hostsModified = appsHostList.addAppToHosts(
+      new Application(appAttributes),
+      ...hostNames
+    );
+    updateStateHosts(hostsModified);
+  }
+
+  return { hosts: hostList };
 }
