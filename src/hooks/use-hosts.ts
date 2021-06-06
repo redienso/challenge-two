@@ -88,7 +88,10 @@ export default function useHosts() {
       } as AppAttributes),
       ...hostNames
     );
-    updateStateHosts(Object.values(deletedByHost).map(([host]) => host));
+    const hostsToUpdate = Object.values(deletedByHost)
+      .map(([host]) => host)
+      .filter((host) => host.reloadFirst25TopApps);
+    updateStateHosts(hostsToUpdate);
     return deletedByHost;
   }
 
@@ -97,7 +100,10 @@ export default function useHosts() {
       new Application(appAttributes),
       ...hostNames
     );
-    updateStateHosts(hostsModified);
+    const hostsToUpdate = hostsModified.filter(
+      (host) => host.reloadFirst25TopApps
+    );
+    updateStateHosts(hostsToUpdate);
   }
 
   return { hosts: hostList };
