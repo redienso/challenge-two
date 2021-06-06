@@ -9,11 +9,11 @@ type PropTypes = {
 const ApplicationList: React.FC<PropTypes> = function ({ apps }) {
   return (
     <React.Fragment>
-      {apps.map(({ id, name, apdex, version }) => (
-        <ApplicationItem key={id} apdex={apdex} name={name} version={version} />
+      {apps.map((app) => (
+        <ApplicationItem key={app.id} app={app} />
       ))}
     </React.Fragment>
   );
 };
 
-export default ApplicationList;
+export default React.memo(ApplicationList);

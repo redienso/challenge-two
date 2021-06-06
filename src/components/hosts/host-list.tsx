@@ -1,8 +1,6 @@
 import React from "react";
-import HostCardTemplate from "../hosts/host-card-template";
-import ApplicationList from "../application/application-list";
-import Typography from "../typography";
 import { UIHost } from "../../hooks/use-hosts";
+import HostCard from "./host-card";
 
 type PropTypes = {
   hosts: UIHost[];
@@ -12,13 +10,10 @@ const HostList: React.FC<PropTypes> = function ({ hosts }) {
   return (
     <React.Fragment>
       {hosts.map((host) => (
-        <HostCardTemplate key={host.name}>
-          <Typography bold>{host.name}</Typography>
-          <ApplicationList apps={host.apps} />
-        </HostCardTemplate>
+        <HostCard key={host.name} host={host} />
       ))}
     </React.Fragment>
   );
 };
 
-export default HostList;
+export default React.memo(HostList);

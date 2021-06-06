@@ -37,8 +37,7 @@ export default function useHosts() {
         "e7bf58af-f0be.dallas.biz",
       ];
       const {
-        [hostNames[0]]: [, deletedAppOne],
-        [hostNames[1]]: [, deletedAppTwo],
+        [hostNames[0]]: [, deletedApp],
       } = removeAppFromHosts(
         {
           apdex: 99,
@@ -48,8 +47,7 @@ export default function useHosts() {
       );
 
       setTimeout(() => {
-        addAppToHosts(deletedAppOne.attrs, ...hostNames);
-        addAppToHosts(deletedAppTwo.attrs, ...hostNames);
+        addAppToHosts(deletedApp.attrs, ...hostNames);
       }, 3000);
     }, 3000);
   }, []);

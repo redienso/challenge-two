@@ -1,7 +1,11 @@
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { AppAttributes } from "../../models/application";
+import { UIApp } from "../../hooks/use-hosts";
 import Typography from "../typography";
+
+type PropTypes = {
+  app: UIApp;
+};
 
 const useStyles = createUseStyles({
   root: {
@@ -12,9 +16,9 @@ const useStyles = createUseStyles({
   },
 });
 
-const ApplicationItem: React.FC<
-  Pick<AppAttributes, "apdex" | "name" | "version">
-> = function ({ apdex, name, version }) {
+const ApplicationItem: React.FC<PropTypes> = function ({
+  app: { apdex, name, version },
+}) {
   const classes = useStyles();
 
   function showReleaseVersion() {
@@ -32,4 +36,4 @@ const ApplicationItem: React.FC<
   );
 };
 
-export default ApplicationItem;
+export default React.memo(ApplicationItem);
