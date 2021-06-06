@@ -1,4 +1,4 @@
-import AppsHost from "./host";
+import AppsHost from "./apps-host";
 import Application from "./application";
 
 export default class AppsHostList {

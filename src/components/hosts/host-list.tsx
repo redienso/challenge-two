@@ -1,5 +1,5 @@
 import React from "react";
-import AppsHost from "../../models/host";
+import AppsHost from "../../models/apps-host";
 import HostCardTemplate from "../hosts/host-card-template";
 import ApplicationList from "../application/application-list";
 import Typography from "../typography";
