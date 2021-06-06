@@ -1,8 +1,6 @@
 import React from "react";
 import AppsHostList from "../models/hosts-list";
 import Application, { AppAttributes, AppFromBack } from "../models/application";
-// TODO remove this mock
-import mockApps from "../apps";
 import AppsHost from "../models/apps-host";
 
 const appsHostList = new AppsHostList();
@@ -20,19 +18,15 @@ const appsCountForUIHost = 5;
 export default function useHosts() {
   const [hosts, setHosts] = React.useState<Record<string, UIHost>>({});
   const hostList = React.useMemo(() => Object.values(hosts), [hosts]);
-  /*
+
   React.useEffect(() => {
     fetch("https://kuupanda.free.beeceptor.com/apps", { method: "get" })
       .then((response) => response.json())
-      .then(loadApps);
+      .then(loadAppsFromBack)
+      .then(() => test());
   }, []);
-  */
 
-  // TODO remove this mock code
-  React.useEffect(() => {
-    loadAppsFromBack(mockApps);
-
-    // delete app with name = "Generic Concrete Car - Roberts - Brown, Inc"
+  function test() {
     setTimeout(() => {
       const hostNames = [
         "7e6272f7-098e.dakota.biz",
@@ -52,7 +46,7 @@ export default function useHosts() {
         addAppToHosts(deletedApp.attrs, ...hostNames);
       }, 3000);
     }, 3000);
-  }, []);
+  }
 
   // time complexity is O(s * m * log n) -> s = apps.length, m = hosts count of specified app, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   function loadAppsFromBack(apps: AppFromBack[]) {
