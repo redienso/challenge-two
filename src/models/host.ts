@@ -44,7 +44,7 @@ export default class AppsHost implements IHost<Application> {
   addGuest(app: Application) {
     if (this.wasAddedOnePotentialFirst25TopApp(app))
       this.reloadFirst25TopApps = true;
-    this._guestsTree.addNode(app);
+    this._guestsTree.addValue(app);
   }
 
   private wasAddedOnePotentialFirst25TopApp(app: Application) {
@@ -55,7 +55,7 @@ export default class AppsHost implements IHost<Application> {
   }
 
   removeGuest(app: Application) {
-    const removedApp = this._guestsTree.removeNode(app);
+    const removedApp = this._guestsTree.removeValue(app);
     if (removedApp && this.wasRemovedOnePotentialFirst25TopApp(removedApp))
       this.reloadFirst25TopApps = true;
     return removedApp;

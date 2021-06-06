@@ -1,5 +1,20 @@
-import Comparable from "./comparable";
+import Findable from "./findable";
+export default abstract class Guest<T extends Findable<T>>
+  implements Findable<T>
+{
+  private _id: string;
 
-export default interface Guest<T> extends Comparable<T> {
-  isEquals(t: T): boolean;
+  constructor(id: string) {
+    this._id = id;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  abstract compareTo(t: T): number;
+
+  isEquals(t: T): boolean {
+    return this.id === t.id;
+  }
 }

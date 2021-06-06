@@ -1,31 +1,32 @@
-import Comparable from "./abstract/comparable";
+import Findable from "./abstract/findable";
 import IAVLTree from "./abstract/i-avl-tree";
 import IAVLTreeNode from "./abstract/i-avl-tree-node";
 import AVLTreeNode from "./avl-tree-node";
 
-export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
+export default class AVLTree<T extends Findable<T>> implements IAVLTree<T> {
   root: IAVLTreeNode<T> = null;
 
-  addNode(nodeValue: T) {
-    this.root = this._addNode(nodeValue, this.root);
+  addValue(nodeValue: T) {
+    this.root = this._addValue(nodeValue, this.root);
   }
 
-  private _addNode(nodeValue: T, node: IAVLTreeNode<T>) {
+  private _addValue(nodeValue: T, node: IAVLTreeNode<T>) {
     if (node === null) return new AVLTreeNode(nodeValue);
 
-    const comparativeResult = node.value.compareTo(nodeValue);
-    // if (comparativeResult == 0) -- add value to node.value array
+    const comparativeResult = node.valueRepresentation.compareTo(nodeValue);
     if (comparativeResult > 0) {
-      node.left = this._addNode(nodeValue, node.left);
+      node.left = this._addValue(nodeValue, node.left);
     } else if (comparativeResult < 0) {
-      node.right = this._addNode(nodeValue, node.right);
-    } // else console.log(nodeValue);
+      node.right = this._addValue(nodeValue, node.right);
+    } else {
+      node.value.set(nodeValue.id, nodeValue);
+    }
 
     node.updateHeight();
 
     if (node.balance < -1) {
       const comparativeResultFromLeftNode =
-        node.left.value.compareTo(nodeValue);
+        node.left.valueRepresentation.compareTo(nodeValue);
       if (comparativeResultFromLeftNode > 0) {
         return node.rotateToRight();
       } else if (comparativeResultFromLeftNode < 0) {
@@ -33,7 +34,8 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
         return node.rotateToRight();
       }
     } else if (node.balance > 1) {
-      const compareResultFromRightNode = node.right.value.compareTo(nodeValue);
+      const compareResultFromRightNode =
+        node.right.valueRepresentation.compareTo(nodeValue);
       if (compareResultFromRightNode < 0) {
         return node.rotateToLeft();
       } else if (compareResultFromRightNode > 0) {
@@ -45,30 +47,35 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
     return node;
   }
 
-  removeNode(nodeValue: T): T {
-    const [root, deleted] = this._removeNode(nodeValue, this.root);
+  removeValue(nodeValue: T): T {
+    const [root, deleted] = this._removeValue(nodeValue, this.root);
     this.root = root;
     return deleted;
   }
 
-  private _removeNode(
+  private _removeValue(
     nodeValue: T,
-    node: IAVLTreeNode<T>
+    node: IAVLTreeNode<T>,
+    removeNode?: boolean
   ): [IAVLTreeNode<T>, T] {
     let deleted = null;
     if (!node) return [node, deleted];
 
-    const comparativeResult = nodeValue.compareTo(node.value);
+    const comparativeResult = nodeValue.compareTo(node.valueRepresentation);
     if (comparativeResult < 0) {
-      const [newNode, newDeleted] = this._removeNode(nodeValue, node.left);
+      const [newNode, newDeleted] = this._removeValue(nodeValue, node.left);
       node.left = newNode;
       deleted = newDeleted;
     } else if (comparativeResult > 0) {
-      const [newNode, newDeleted] = this._removeNode(nodeValue, node.right);
+      const [newNode, newDeleted] = this._removeValue(nodeValue, node.right);
       node.right = newNode;
       deleted = newDeleted;
     } else {
-      deleted = node.value;
+      if (!removeNode) {
+        deleted = node.value.get(nodeValue.id);
+        node.value.delete(nodeValue.id);
+      }
+      if (node.value.size && !removeNode) return [node, deleted];
       if (!node.left && !node.right) {
         node = null;
       } else if (!node.left) {
@@ -78,7 +85,11 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
       } else {
         const nodeWithSuccessorValue = this.getNodeWithMinValue(node.right);
         node.value = nodeWithSuccessorValue.value;
-        const [newNode] = this._removeNode(node.value, node.right);
+        const [newNode] = this._removeValue(
+          node.valueRepresentation,
+          node.right,
+          true
+        );
         node.right = newNode;
       }
     }
@@ -121,11 +132,13 @@ export default class AVLTree<T extends Comparable<T>> implements IAVLTree<T> {
     const list = [];
 
     const stepByNode = {
-      left: (node) => _travel(node.left),
-      right: (node) => _travel(node.right),
-      root: (node) => {
-        if (list.length + 1 > amount) return;
-        list.push(node.value);
+      left: (node: IAVLTreeNode<T>) => _travel(node.left),
+      right: (node: IAVLTreeNode<T>) => _travel(node.right),
+      root: (node: IAVLTreeNode<T>) => {
+        for (const value of node.value.values()) {
+          if (list.length + 1 > amount) return;
+          list.push(value);
+        }
       },
     };
 

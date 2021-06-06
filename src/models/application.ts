@@ -10,10 +10,11 @@ export interface AppFromBack extends AppAttributes {
   host: string[];
 }
 
-export default class Application implements Guest<Application> {
+export default class Application extends Guest<Application> {
   private attrs: AppAttributes;
 
   constructor(attributes: AppAttributes) {
+    super(attributes.name);
     this.attrs = attributes;
   }
 
@@ -27,9 +28,5 @@ export default class Application implements Guest<Application> {
 
   private compareApdexTo(app: Application) {
     return this.get("apdex") - app.get("apdex");
-  }
-
-  isEquals(app: Application) {
-    return this.get("name") == app.get("name");
   }
 }

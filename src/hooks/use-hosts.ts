@@ -24,7 +24,10 @@ export default function useHosts() {
     // delete app with name = "Generic Concrete Car - Roberts - Brown, Inc"
     console.log(
       appsHostList.removeAppFromHosts(
-        new Application({ apdex: 76 } as AppAttributes),
+        new Application({
+          apdex: 76,
+          name: "Generic Concrete Car - Roberts - Brown, Inc",
+        } as AppAttributes),
         "7e6272f7-098e.dakota.biz"
       )
     );

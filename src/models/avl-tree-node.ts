@@ -1,16 +1,22 @@
-import Comparable from "./abstract/comparable";
+import Findable from "./abstract/findable";
 import IAVLTreeNode from "./abstract/i-avl-tree-node";
 
-export default class AVLTreeNode<T extends Comparable<T>>
+export default class AVLTreeNode<T extends Findable<T>>
   implements IAVLTreeNode<T>
 {
   left = null;
   right = null;
-  value: T;
+  value: Map<string, T> = new Map();
+  private _valueRepresentation: T;
   private _height: number = 1;
 
   constructor(value: T) {
-    this.value = value;
+    this.value.set(value.id, value);
+    this._valueRepresentation = value;
+  }
+
+  get valueRepresentation() {
+    return this._valueRepresentation;
   }
 
   get height() {
