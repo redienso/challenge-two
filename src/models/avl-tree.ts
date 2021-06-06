@@ -6,10 +6,12 @@ import AVLTreeNode from "./avl-tree-node";
 export default class AVLTree<T extends Findable<T>> implements IAVLTree<T> {
   root: IAVLTreeNode<T> = null;
 
+  // time complexity is O(log n) ->  log n = deep of avl tree, n = nodes count of avl tree
   addValue(nodeValue: T) {
     this.root = this._addValue(nodeValue, this.root);
   }
 
+  // time complexity is O(log n) ->  log n = deep of avl tree from parameter node until down, n = nodes count of alv tree from parameter node until down
   private _addValue(nodeValue: T, node: IAVLTreeNode<T>) {
     if (node === null) return new AVLTreeNode(nodeValue);
 
@@ -47,12 +49,14 @@ export default class AVLTree<T extends Findable<T>> implements IAVLTree<T> {
     return node;
   }
 
+  // time complexity is O(log n) ->  log n = deep of avl tree, n = nodes count of avl tree
   removeValue(nodeValue: T): T {
     const [root, deleted] = this._removeValue(nodeValue, this.root);
     this.root = root;
     return deleted;
   }
 
+  // time complexity is O(log n) ->  log n = deep of avl tree from parameter node until down, n = nodes count of alv tree from parameter node until down
   private _removeValue(
     nodeValue: T,
     node: IAVLTreeNode<T>,
@@ -115,6 +119,7 @@ export default class AVLTree<T extends Findable<T>> implements IAVLTree<T> {
     return [node, deleted];
   }
 
+  // time complexity is O(log n) -> log n = deep of avl tree from parameter node until down, n = nodes count of alv tree from parameter node until down
   private getNodeWithMinValue(node: IAVLTreeNode<T>): IAVLTreeNode<T> {
     let current = node;
     while (current.left) {
@@ -123,6 +128,7 @@ export default class AVLTree<T extends Findable<T>> implements IAVLTree<T> {
     return current;
   }
 
+  // time complexity is O(n) -> n = amount of elements to travel through
   travel(order, amount): T[] {
     if (new Set(order).size != 3)
       throw Error(

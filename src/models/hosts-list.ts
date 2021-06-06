@@ -8,10 +8,12 @@ export default class AppsHostList {
     return this._hosts;
   }
 
+  // time complexity is O(1) -> in worst case it travels through just 25 elements
   getTopAppsByHost(hostName: string): Application[] {
     return this._hosts.get(hostName).first25TopApps;
   }
 
+  // time complexity is O(m * log n) -> m = hostsName.length, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   addAppToHosts(newApp: Application, ...hostsNames: string[]) {
     const hostsModified = [];
     for (const hostName of hostsNames) {
@@ -25,6 +27,7 @@ export default class AppsHostList {
     return hostsModified;
   }
 
+  // time complexity is O(m * log n) -> m = hostsName.length, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   removeAppFromHosts(app: Application, ...hostsNames: string[]) {
     const deletedByHost: Record<string, [AppsHost, Application]> = {};
     for (const hostName of hostsNames) {

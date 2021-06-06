@@ -54,12 +54,14 @@ export default function useHosts() {
     }, 3000);
   }, []);
 
+  // time complexity is O(s * m * log n) -> s = apps.length, m = hosts count of specified app, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   function loadAppsFromBack(apps: AppFromBack[]) {
     for (const { host: hosts, ...appAttrs } of apps) {
       addAppToHosts(appAttrs, ...hosts);
     }
   }
 
+  // time complexity is O(m) -> m = hosts.length
   function updateStateHosts(hosts: AppsHost[]) {
     for (const host of hosts) {
       setHosts((current) => ({
@@ -77,6 +79,7 @@ export default function useHosts() {
     }
   }
 
+  // time complexity is O(m * log n) -> m = hostsName.length, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   function removeAppFromHosts(
     { name, apdex }: Pick<UIApp, "name" | "apdex">,
     ...hostNames: string[]
@@ -95,6 +98,7 @@ export default function useHosts() {
     return deletedByHost;
   }
 
+  // time complexity is O(m * log n) -> m = hostsName.length, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   function addAppToHosts(appAttributes: AppAttributes, ...hostNames: string[]) {
     const hostsModified = appsHostList.addAppToHosts(
       new Application(appAttributes),

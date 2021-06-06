@@ -23,19 +23,23 @@ export default class AVLTreeNode<T extends Findable<T>>
     return this._height;
   }
 
+  // time complexity is O(1) -> always does same constant process
   get balance() {
     return this.getHeight(this.right) - this.getHeight(this.left);
   }
 
+  // time complexity is O(1) -> always does same constant process
   private getHeight(node: IAVLTreeNode<T>) {
     return node ? node.height : 0;
   }
 
+  // time complexity is O(1) -> always does same constant process
   updateHeight() {
     this._height =
       Math.max(this.getHeight(this.left), this.getHeight(this.right)) + 1;
   }
 
+  // time complexity is O(1) -> always does same constant process
   rotateToRight(): IAVLTreeNode<T> {
     const leftNode = this.left;
     const rightNodeOfLeftNode = leftNode.right;
@@ -46,6 +50,7 @@ export default class AVLTreeNode<T extends Findable<T>>
     return leftNode;
   }
 
+  // time complexity is O(1) -> always does same constant process
   rotateToLeft(): IAVLTreeNode<T> {
     const rightNode = this.right;
     const leftNodeOfRightNode = rightNode.left;
