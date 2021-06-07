@@ -12,7 +12,7 @@ const useStyles = createUseStyles<string, PropTypes>({
     display: "grid",
     gridGap: 30,
     gridTemplateColumns: ({ showAsList }) =>
-      showAsList ? "1fr" : "repeat(2, minmax(375px, 1fr))",
+      showAsList ? "1fr" : "repeat(2, 375px)",
     padding: 30,
     paddingTop: 60,
     width: 840,
