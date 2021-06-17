@@ -51,8 +51,9 @@ export default function useHosts() {
   // time complexity is O(s * m * log n) -> s = apps.length, m = hosts count of specified app, log n = deep of avl guestTree of specified host, n = nodes count of avl guestTree of specified host
   function loadAppsFromBack(apps: AppFromBack[]) {
     for (const { host: hosts, ...appAttrs } of apps) {
-      addAppToHosts(appAttrs, ...hosts);
+      appsHostList.addAppToHosts(new Application(appAttrs), ...hosts);
     }
+    updateStateHosts(Array.from(appsHostList.hosts.values()));
   }
 
   // time complexity is O(m) -> m = hosts.length
